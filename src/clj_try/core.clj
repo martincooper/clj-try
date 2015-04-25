@@ -1,13 +1,24 @@
 (ns clj-try.core)
 
-(defn bind-error [f [val err]]
+; If value, apply function with value. If error, return error.
+(defn bind-error [f {val :value err :error :as all}]
   (if (nil? err)
     (f val)
-    [nil err]))
+    all))
 
 ; Try function.
 (defn try> [fn]
-  ())
+  (try
+    { :value (fn) }
+    (catch Exception ex
+      { :error ex })))
+
+
+
+; Simple run function macro.
+(defmacro trym> [fn]
+  `(~@fn))
+
 
 ; Try thread last macro.
 (defmacro try->> [val & fns]
