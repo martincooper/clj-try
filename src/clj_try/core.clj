@@ -1,49 +1,60 @@
 (ns clj-try.core)
 
-; If value, apply function with value. If error, return error.
-(defn bind-error [f {val :value err :error :as all}]
-  (if (nil? err)
-    (f val)
-    all))
-
-; Try function.
-(defn try> [fn]
-  (try
-    { :value (fn) }
-    (catch Exception ex
-      { :error ex })))
-
-
-; Simple run function macro.
-(defmacro trym> [fn]
-  ` { :value (~@fn)})
-
-; Simple run function macro.
-(defmacro trym3> [fn]
+(defmacro try>
+  "Takes an expression and wraps it in a try / catch.
+  returning the value or exception in a map."
+  [fn]
   `(try
      { :value (~@fn) }
      (catch Exception ex#
        { :error ex# })))
 
+; If value, apply function with value. If error, return error.
+(defn bind-error
+  "Bind method. Determines if to run the expression or return the
+  previous result if an error occurred."
+  [f {val :value err :error :as all}]
+  (if (nil? err)
+    (try> (f val))
+    all))
 
 
-; Try thread last macro.
+(defmacro my->>
+  "Threads the expr through the forms. Inserts x as the
+  last item in the first form, making a list of it if it is not a
+  list already. If there are more forms, inserts the first form as the
+  last item in second form, etc."
+  {:added "1.1"}
+  [x & forms]
+  (loop [x x, forms forms]
+    (if forms
+      (let [form (first forms)
+            threaded (if (seq? form)
+              (with-meta `(~(first form) ~@(next form)  ~x) (meta form))
+              (list form x))]
+        (recur threaded (next forms)))
+      x)))
+
+
+(defmacro err->> [val & fns]
+  (let [fcns (for [f fns] `(bind-error ~f))]
+    `(->> ~val
+          ~@fcns)))
+
 (defmacro try->> [val & fns]
-  (let [fns (for [f fns] `(bind-error ~f))]
-    `(->> [~val nil]
+  (let [fns (for [f fns] `~f)]
+    `(->> ~val
           ~@fns)))
 
-; Try thread first macro.
-(defmacro try-> [val & fns]
-  (let [fns (for [f fns] `(bind-error ~f))]
-    `(-> [~val nil]
-          ~@fns)))
-
-; Try thread as macro.
-(defmacro try-as->> [val & fns]
-  (let [fns (for [f fns] `(bind-error ~f))]
-    `(->> [~val nil]
-          ~@fns)))
 
 (defn test1 []
-  (try> "aa"))
+  (try->>
+   (str "aa")
+   (str "bb")
+   (str "cc")))
+
+
+(defn test2 []
+  (err->>
+   (str "bb")
+   (str "cc")))
