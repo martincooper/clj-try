@@ -14,10 +14,17 @@
       { :error ex })))
 
 
-
 ; Simple run function macro.
 (defmacro trym> [fn]
-  `(~@fn))
+  ` { :value (~@fn)})
+
+; Simple run function macro.
+(defmacro trym3> [fn]
+  `(try
+     { :value (~@fn) }
+     (catch Exception ex#
+       { :error ex# })))
+
 
 
 ; Try thread last macro.
