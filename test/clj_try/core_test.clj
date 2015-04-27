@@ -33,3 +33,19 @@
                   (str "aaa")
                   { :error (NullPointerException. "Test Error")} )]
       (check-exception result "Test Error"))))
+
+(deftest try-last-macro-pass
+  (testing "Testing try->>. Pass case."
+    (let [result (try->>
+                  (str "ccc")
+                  (str "bbb")
+                  (str "aaa"))]
+      (is (= result { :value "aaabbbccc" })))))
+
+(deftest try-last-macro-exception
+  (testing "Testing try->>. Pass case."
+    (let [result (try->>
+                  (str "ccc")
+                  (throw (NullPointerException. "Test Error"))
+                  (str "aaa"))]
+      (check-exception result "Test Error"))))
