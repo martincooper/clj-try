@@ -93,3 +93,37 @@
                   (str (/ 100 0)) ;Throws div by zero exception.
                   (str "aaa"))]
       (check-exception ArithmeticException result "Divide by zero"))))
+
+; ** Try as macro tests **
+
+(deftest bind-error-as-pass
+  (testing "Testing bind-error-as->. Pass case."
+    (let [result (bind-error-as-> (str "aaa" % "ccc") % { :value "bbb" })]
+      (is (= result { :value "aaabbbccc" })))))
+
+(deftest bind-error-as-error
+  (testing "Testing bind-error-as->. Error case."
+    (let [result (bind-error-as-> (str "aaa" % "ccc") % { :error "Test Error" })]
+      (is (= result { :error "Test Error" })))))
+
+(deftest bind-error-as-exception
+  (testing "Testing bind-error-as->. Exception case."
+    (let [result (bind-error-as-> (str "aaa" % "ccc") %
+                  { :error (NullPointerException. "Test Error") })]
+      (check-exception NullPointerException result "Test Error"))))
+
+(deftest try-as-macro-pass
+  (testing "Testing try-as->. Pass case."
+    (let [result (try-as-> "aaa" %
+                  (str % "bbb")
+                  (str "ccc" %)
+                  (str % "ddd"))]
+      (is (= result { :value "cccaaabbbddd" })))))
+
+(deftest try-as-macro-exception
+  (testing "Testing try-as->. Exception case."
+    (let [result (try-as-> "ddd" %
+                  (str % "ccc")
+                  (str (/ 100 0)) ;Throws div by zero exception.
+                  (str "aaa" %))]
+      (check-exception ArithmeticException result "Divide by zero"))))
