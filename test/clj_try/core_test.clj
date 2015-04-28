@@ -3,8 +3,8 @@
             [clj-try.core :refer :all]))
 
 (defn check-exception
-  [{ ex :error } msg]
-  (is (instance? NullPointerException ex))
+  [ex-type { ex :error } msg]
+  (is (instance? ex-type ex))
   (is (= (.getMessage ex) msg)))
 
 ; ** Try macro tests **
@@ -22,26 +22,26 @@
 (deftest try-macro-exception
   (testing "Testing try> macro. Exception case."
     (let [result (try> (throw (NullPointerException. "Test Error")))]
-      (check-exception result "Test Error"))))
+      (check-exception NullPointerException result "Test Error"))))
 
 ; ** Try first macro tests **
 
 (deftest bind-error-first-pass
   (testing "Testing bind-error->. Pass case."
-    (let [result (bind-error-> (str "aaa") { :value "bbb"} )]
+    (let [result (bind-error-> (str "aaa") { :value "bbb" })]
       (is (= result { :value "bbbaaa" })))))
 
 (deftest bind-error-first-error
   (testing "Testing bind-error->. Error case."
-    (let [result (bind-error-> (str "aaa") { :error "Test Error"} )]
+    (let [result (bind-error-> (str "aaa") { :error "Test Error" })]
       (is (= result { :error "Test Error" })))))
 
 (deftest bind-error-first-exception
   (testing "Testing bind-error->. Exception case."
     (let [result (bind-error->
                   (str "aaa")
-                  { :error (NullPointerException. "Test Error")} )]
-      (check-exception result "Test Error"))))
+                  { :error (NullPointerException. "Test Error") })]
+      (check-exception NullPointerException result "Test Error"))))
 
 (deftest try-first-macro-pass
   (testing "Testing try->. Pass case."
@@ -55,28 +55,28 @@
   (testing "Testing try->. Exception case."
     (let [result (try->
                   (str "ccc")
-                  (throw (NullPointerException. "Test Error"))
+                  (str (/ 100 0)) ;Throws div by zero exception.
                   (str "aaa"))]
-      (check-exception result "Test Error"))))
+      (check-exception ArithmeticException result "Divide by zero"))))
 
 ; ** Try last macro tests **
 
 (deftest bind-error-last-pass
   (testing "Testing bind-error->>. Pass case."
-    (let [result (bind-error->> (str "aaa") { :value "bbb"} )]
+    (let [result (bind-error->> (str "aaa") { :value "bbb" })]
       (is (= result { :value "aaabbb" })))))
 
 (deftest bind-error-last-error
   (testing "Testing bind-error->>. Error case."
-    (let [result (bind-error->> (str "aaa") { :error "Test Error"} )]
+    (let [result (bind-error->> (str "aaa") { :error "Test Error" })]
       (is (= result { :error "Test Error" })))))
 
 (deftest bind-error-last-exception
   (testing "Testing bind-error->>. Exception case."
     (let [result (bind-error->>
                   (str "aaa")
-                  { :error (NullPointerException. "Test Error")} )]
-      (check-exception result "Test Error"))))
+                  { :error (NullPointerException. "Test Error") })]
+      (check-exception NullPointerException result "Test Error"))))
 
 (deftest try-last-macro-pass
   (testing "Testing try->>. Pass case."
@@ -90,6 +90,6 @@
   (testing "Testing try->>. Exception case."
     (let [result (try->>
                   (str "ccc")
-                  (throw (NullPointerException. "Test Error"))
+                  (str (/ 100 0)) ;Throws div by zero exception.
                   (str "aaa"))]
-      (check-exception result "Test Error"))))
+      (check-exception ArithmeticException result "Divide by zero"))))
