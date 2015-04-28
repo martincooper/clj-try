@@ -32,6 +32,8 @@ If any expression in a try block fails / throws an exception, the call chain sho
 ```
 
 ## Try - Thread first
+
+The "Try Thread First" macro is based on the Clojure/core "thread first" -> macro. Each expression is evaluated in a try / catch block, if no exception occurs, the result is passed in as the **_first_** argument to the next expression.
 ```clojure
 (try-> "a b c d" 
        .toUpperCase 
@@ -40,6 +42,7 @@ If any expression in a try block fails / throws an exception, the call chain sho
        first)
 
 ;; => {:value "X"}
+
 
 (try-> "a b c d" 
        .toUpperCase 
@@ -51,6 +54,8 @@ If any expression in a try block fails / throws an exception, the call chain sho
 ```
 
 ## Try - Thread last
+
+The "Try Thread Last" macro is based on the Clojure/core "thread last" ->> macro. Each expression is evaluated in a try / catch block, if no exception occurs, the result is passed in as the **_last_** argument to the next expression.
 ```clojure
 (try->> (range)
         (map #(* % %))
@@ -59,6 +64,7 @@ If any expression in a try block fails / throws an exception, the call chain sho
         (reduce +))
 
 ;; => {:value 1140}
+
 
 (try->> (range)
         (map #(* % %))
@@ -70,6 +76,8 @@ If any expression in a try block fails / throws an exception, the call chain sho
 ```
 
 ## Try - Thread as
+
+The "Try Thread As" macro is based on the Clojure/core "thread as" as-> macro. Each expression is evaluated in a try / catch block, if no exception occurs, the result is passed in as the **_specified_** argument to the next expression (in this example, specified by the percentage symbol)
 ```clojure
 (try-as-> " a b c d " %
        (.toUpperCase %) 
