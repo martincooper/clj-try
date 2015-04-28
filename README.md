@@ -10,6 +10,8 @@ Clojure Try / Error macro.
 ```clojure
 (ns hello-world.core
   (:require [clj-try.core :refer :all]))
+```
+
 
 ### Credits
 
