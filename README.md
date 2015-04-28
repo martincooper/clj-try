@@ -3,13 +3,17 @@ Clojure Try / Error macros.
 
 ## Overview
 
-This set of macros allows a more functional, composable way to handle exceptions similar in style to the Try computation (Monad) in other functional langages. These macros are based upon the three Clojure threading macros -> (thread first), ->> (thread last) and as-> (thread as), wrapping each expression up in a try catch handler, returning either the result of the function, or the exception in a map.
+This set of macros allows a more functional, composable way to handle exceptions similar in style to the Try computation (Monad) found in other functional langages. These macros are based upon the three Clojure threading macros -> (thread first), ->> (thread last) and as-> (thread as), wrapping each expression up in a try catch handler, returning either the result of the function, or the exception in a map.
+
+
 
 # Example Usage
 
 ## Adding a reference.
 
 ```clojure
+
+[clj-try "0.1.0"]
 
 ;; In your ns statement:
 (ns my.ns
