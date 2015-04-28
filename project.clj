@@ -1,4 +1,4 @@
-(defproject clj-try "0.1.0-SNAPSHOT"
+(defproject clj-try "0.1.0"
   :description "clj-try: Try / Error macros"
   :url "https://github.com/martincooper/clj-try"
   :license {:name "Apache License Version 2.0"
