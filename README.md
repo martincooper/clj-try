@@ -3,9 +3,19 @@ Clojure Try / Error macros.
 
 ## Overview
 
-This set of macros allows a more functional, composable way to handle exceptions similar in style to the Try computation (Monad) found in other functional langages. These macros are based upon the three Clojure threading macros -> (thread first), ->> (thread last) and as-> (thread as), wrapping each expression up in a try catch handler, returning either the result of the function, or the exception in a map.
+This set of macros allows a more functional, composable way to handle exceptions similar in style to the Try computation (Monad) found in other functional langages. These macros are based upon the three Clojure threading macros -> (thread first), ->> (thread last) and as-> (thread as). 
 
+Each expression passed to a try block is evaluated in a try catch handler. If the expression doesn't fail, the result from that expression will be passed as an argument into the next expression (either as the first, last or specified argument). This in turn will get evaluated in a try / catch block until all expressions have been evaluated. If no exceptions occurred, the final result will be returned in a map with a :value key...
 
+```clojure
+;; => {:value "My Result"}
+```
+
+If any expression in a try block fails / throws an exception, the call chain short-circuits returning the original exception in a map with an :error key containing the exception...
+
+```clojure
+;; => {:error #<ArithmeticException java.lang.ArithmeticException: Divide by zero>}
+```
 
 # Example Usage
 
@@ -77,7 +87,6 @@ This set of macros allows a more functional, composable way to handle exceptions
 
 ;; => {:error #<NumberFormatException java.lang.NumberFormatException: For input string: " X B C D ">}
 ```
-
 
 ### Credits
 
