@@ -7,7 +7,7 @@ This set of macros allows a more functional, composable way to handle exceptions
 
 # Example Usage
 
-## Creating
+## Adding a reference.
 
 ```clojure
 
@@ -27,7 +27,6 @@ This set of macros allows a more functional, composable way to handle exceptions
 
 ;; => {:value "X"}
 
-
 (try-> "a b c d" 
        .toUpperCase 
        (.replace "A" "X") 
@@ -36,7 +35,6 @@ This set of macros allows a more functional, composable way to handle exceptions
 
 ;; => {:error #<ArithmeticException java.lang.ArithmeticException: Divide by zero>}
 ```
-
 
 ## Try - Thread last
 ```clojure
@@ -48,7 +46,6 @@ This set of macros allows a more functional, composable way to handle exceptions
 
 ;; => {:value 1140}
 
-
 (try->> (range)
         (map #(* % %))
         (filter even?)
@@ -56,6 +53,25 @@ This set of macros allows a more functional, composable way to handle exceptions
         (reduce +))
 
 ;; => {:error #<ArithmeticException java.lang.ArithmeticException: Divide by zero>}
+```
+
+## Try - Thread as
+```clojure
+(try-as-> " a b c d " %
+       (.toUpperCase %) 
+       (.replace % "A" "X") 
+       (.trim %))
+
+;; => {:value "X B C D"}
+
+
+(try-as-> " a b c d " %
+       (.toUpperCase %) 
+       (.replace % "A" "X") 
+       (Integer/parseInt %)   ;; NumberFormatException !!
+       (.trim %)
+
+;; => {:error #<NumberFormatException java.lang.NumberFormatException: For input string: " X B C D ">}
 ```
 
 
