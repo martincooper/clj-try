@@ -17,10 +17,16 @@
   (value [this] nil)
   (error [this] (:error this)))
 
-(defn success [value]
+;; Try result helpers.
+
+(defn success
+  "Returns a new Success item."
+  [value]
   (->Success value))
 
-(defn failure [error]
+(defn failure
+  "Returns a new Failure item."
+  [error]
   (->Failure error))
 
 (defn val?
@@ -40,6 +46,11 @@
   (if (err? try-result)
     default
     (:value try-result)))
+
+(defn val-or-nil
+  "If the result is a success, the value is returned, else nil is returned."
+  [try-result]
+  (val-or try-result nil))
 
 ;; Try macro definitions.
 
