@@ -30,7 +30,7 @@
   (->Failure error))
 
 (defn val?
-  "Returns true is the result is a success."
+  "Returns true if the result is a success."
   [try-result]
   (not (nil? (:value try-result))))
 
