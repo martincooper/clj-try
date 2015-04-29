@@ -17,6 +17,12 @@
   (value [this] nil)
   (error [this] (:error this)))
 
+(defn success [value]
+  (->Success value))
+
+(defn failure [error]
+  (->Failure error))
+
 (defn val?
   "Returns true is the result is a success."
   [try-result]
@@ -42,9 +48,9 @@
   returning the value or exception in a map."
   [fn]
   `(try
-     { :value (do ~fn) }
+     (Success. (do ~fn))
      (catch Exception ex#
-       { :error ex# })))
+       (Failure. ex#))))
 
 (defmacro bind-error->>
   "Bind error last. Determines if to run the expression or return the
