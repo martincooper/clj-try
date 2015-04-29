@@ -1,5 +1,7 @@
 (ns clj-try.core)
 
+;; Result types.
+
 (defprotocol TryResult
   "A protocol for handling success / failure states."
   (value [this] "Value on success")
@@ -15,15 +17,25 @@
   (value [this] nil)
   (error [this] (:error this)))
 
+(defn val?
+  "Returns true is the result is a success."
+  [try-result]
+  (not (nil? (:value try-result))))
+
 (defn err?
+  "Returns true if the result is a failure."
   [try-result]
   (not (nil? (:error try-result))))
 
 (defn val-or
+  "If the result is a success, the value is returned,
+  else the value passed as the default is returned."
   [try-result default]
   (if (err? try-result)
     default
     (:value try-result)))
+
+;; Try macro definitions.
 
 (defmacro try>
   "Takes an expression and wraps it in a try / catch
