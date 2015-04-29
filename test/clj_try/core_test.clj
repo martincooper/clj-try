@@ -127,3 +127,45 @@
                   (str (/ 100 0)) ;Throws div by zero exception.
                   (str "aaa" %))]
       (check-exception ArithmeticException result "Divide by zero"))))
+
+;; Result helper tests.
+
+(deftest new-success
+  (testing "Testing new success."
+    (is (= (->Success "12345") (success "12345")))))
+
+(deftest new-failure
+  (testing "Testing new failure."
+    (is (= (->Failure "12345") (failure "12345")))))
+
+(deftest is-val-positive
+  (testing "Testing val? on success."
+    (is (= (val? (->Success "12345")) true))))
+
+(deftest is-val-negative
+  (testing "Testing val? on failure."
+    (is (= (val? (->Failure "12345")) false))))
+
+(deftest is-err-positive
+  (testing "Testing err? on success."
+    (is (= (err? (->Success "12345")) false))))
+
+(deftest is-err-negative
+  (testing "Testing err? on failure."
+    (is (= (err? (->Failure "12345")) true))))
+
+(deftest is-val-or-positive
+  (testing "Testing val-or on success."
+    (is (= (val-or (->Success "12345") "9876") "12345"))))
+
+(deftest is-val-or-negative
+  (testing "Testing val-or on failure."
+    (is (= (val-or (->Failure "12345") "9876") "9876"))))
+
+(deftest is-val-or-nil-positive
+  (testing "Testing val-or-nil on success."
+    (is (= (val-or-nil (->Success "12345")) "12345"))))
+
+(deftest is-val-or-nil-negative
+  (testing "Testing val-or-nil on failure."
+    (is (= (val-or-nil (->Failure "12345")) nil))))
