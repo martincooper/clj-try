@@ -72,7 +72,8 @@ The "Try Thread Last" macro is based on the Clojure/core "thread last" ->> macro
         (take (/ 10 0))   ;; Div by zero exception!! 
         (reduce +))
 
-;; => #clj_try.core.Failure{:error #<ArithmeticException java.lang.ArithmeticException: Divide by zero>}
+;; => #clj_try.core.Failure{:error #<ArithmeticException
+                java.lang.ArithmeticException: Divide by zero>}
 ```
 
 ## Try - Thread as
