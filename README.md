@@ -24,7 +24,7 @@ If any expression in a try block fails / throws an exception, the call chain sho
 
 ```clojure
 
-[clj-try "0.2.0"]
+[clj-try "0.3.0"]
 
 ;; In your ns statement:
 (ns my.ns
