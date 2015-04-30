@@ -135,6 +135,10 @@ There are a number of built in methods to make it easier to handle the result re
 (:error result)
 ;; => #<Exception java.lang.Exception: Err!!>
 
+;; Or by using err.
+(err result)
+;; => #<Exception java.lang.Exception: Err!!>
+
 ;; Dereferencing a failure will ** throw the exception!! **.
 @result
 ;; => Exception Err!!

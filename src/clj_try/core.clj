@@ -121,6 +121,11 @@
   [try-result]
   (instance? Failure try-result))
 
+(defn err
+  "Returns the error if there is a failure, else returns nil."
+  [try-result]
+  (if (err? try-result) (:error try-result) nil))
+
 (defn val-or
   "If the result is a success, the value is returned,
   else the value passed as the default is returned."

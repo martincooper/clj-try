@@ -138,6 +138,14 @@
   (testing "Testing new failure."
     (is (= (->Failure "12345") (failure "12345")))))
 
+(deftest err-negative
+  (testing "Testing err on success."
+    (is (= (err (->Success "12345")) nil))))
+
+(deftest err-positive
+  (testing "Testing err on failure."
+    (is (= (err (->Failure "12345")) "12345"))))
+
 (deftest is-val-positive
   (testing "Testing val? on success."
     (is (= (val? (->Success "12345")) true))))
