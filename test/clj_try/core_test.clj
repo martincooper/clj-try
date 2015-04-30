@@ -169,3 +169,14 @@
 (deftest is-val-or-nil-negative
   (testing "Testing val-or-nil on failure."
     (is (= (val-or-nil (->Failure "12345")) nil))))
+
+;; Deref tests.
+
+(deftest deref-success
+  (testing "Testing a deref operation on a success."
+    (is (= @(->Success "12345") "12345"))))
+
+(deftest deref-failure
+  (testing "Testing a deref operation on a failure."
+    (is (thrown-with-msg? NullPointerException #"Test Error"
+                          @(failure (NullPointerException. "Test Error"))))))
