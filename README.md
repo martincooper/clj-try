@@ -113,8 +113,9 @@ There are a number of built in methods to make it easier to handle the result re
 (val? result) ;; Returns true if no failure occurred.
 ;; => true
 
-;; The value can be returned by accessing the **_:value_** key.
+;; The value can be returned by accessing the :value key.
 (:value result)
+;; => "abc"
 
 ;; Or by dereferencing the successful result.
 @result
@@ -130,10 +131,11 @@ There are a number of built in methods to make it easier to handle the result re
 (val? result) ;; Returns the value if a failure didn't occur.
 ;; => false
 
-;; The error can be returned by accessing the **_:error_** key.
+;; The error can be returned by accessing the :error key.
 (:error result)
+#<Exception java.lang.Exception: Err!!>
 
-;; Dereferencing a failure **_will throw the exception!!_**.
+;; Dereferencing a failure will ** throw the exception!! **.
 @result
 ;; => Exception Err!!
 
