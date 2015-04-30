@@ -133,7 +133,7 @@ There are a number of built in methods to make it easier to handle the result re
 
 ;; The error can be returned by accessing the :error key.
 (:error result)
-#<Exception java.lang.Exception: Err!!>
+;; => #<Exception java.lang.Exception: Err!!>
 
 ;; Dereferencing a failure will ** throw the exception!! **.
 @result
