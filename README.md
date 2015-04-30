@@ -100,6 +100,50 @@ The "Try Thread As" macro is based on the Clojure/core "thread as" as-> macro. E
 ;;          java.lang.NumberFormatException: For input string: " X B C D ">}
 ```
 
+## Result Methods
+
+There are a number of built in methods to make it easier to handle the result returned from evaluating these expressions. 
+
+```clojure
+(let [result (try-> "abc")]) ;; On a success...
+
+(err? result) ;; Returns true if a failure occurred.
+;; => false
+
+(val? result) ;; Returns true if no failure occurred.
+;; => true
+
+;; The value can be returned by accessing the **_:value_** key.
+(:value result)
+
+;; Or by dereferencing the successful result.
+@result
+;; => "abc"
+```
+
+```clojure
+(let [result (try-> (throw (Exception. "Err!!")))]) ;; On a failure...
+
+(err? result) ;; Returns true if a failure occurred.
+;; => true
+
+(val? result) ;; Returns the value if a failure didn't occur.
+;; => false
+
+;; The error can be returned by accessing the **_:error_** key.
+(:error result)
+
+;; Dereferencing a failure **_will throw the exception!!_**.
+@result
+;; => Exception Err!!
+
+(val-or result "My Value") ;; Returns the value, or a default if it's a failure.
+;; => "My Result"
+
+(val-or-nil result) ;; Returns the value, or nil if it's a failure.
+;; => nil
+```
+
 ### Credits
 
 Clojure Try / Error macro is maintained by Martin Cooper : Copyright (c) 2015
