@@ -8,49 +8,28 @@
   (error [this] "Value on error"))
 
 (defrecord Success [value]
+  clojure.lang.IDeref
   TryResult
   (value [this] (:value this))
-  (error [this] nil))
+  (error [this] nil)
+  (deref [this] (:value this)))
 
 (defrecord Failure [error]
+  clojure.lang.IDeref
   TryResult
   (value [this] nil)
-  (error [this] (:error this)))
+  (error [this] (:error this))
+  (deref [this]
+    (let [err (:error this)]
+      (if (instance? Throwable err)
+        (throw err)
+        (throw (Exception. (str err)))))))
 
-;; Try result helpers.
+(defmethod clojure.core/print-method Success [item writer]
+  ((get-method print-method clojure.lang.IRecord) item writer))
 
-(defn success
-  "Returns a new Success item."
-  [value]
-  (->Success value))
-
-(defn failure
-  "Returns a new Failure item."
-  [error]
-  (->Failure error))
-
-(defn val?
-  "Returns true if the result is a success."
-  [try-result]
-  (not (nil? (:value try-result))))
-
-(defn err?
-  "Returns true if the result is a failure."
-  [try-result]
-  (not (nil? (:error try-result))))
-
-(defn val-or
-  "If the result is a success, the value is returned,
-  else the value passed as the default is returned."
-  [try-result default]
-  (if (err? try-result)
-    default
-    (:value try-result)))
-
-(defn val-or-nil
-  "If the result is a success, the value is returned, else nil is returned."
-  [try-result]
-  (val-or try-result nil))
+(defmethod clojure.core/print-method Failure [item writer]
+  ((get-method print-method clojure.lang.IRecord) item writer))
 
 ;; Try macro definitions.
 
@@ -119,3 +98,38 @@
   (let [fcns (for [f fns] `(bind-error-as-> ~f ~name))]
     `(->> (try> ~val)
           ~@fcns)))
+
+;; Try result helpers.
+
+(defn success
+  "Returns a new Success item."
+  [value]
+  (->Success value))
+
+(defn failure
+  "Returns a new Failure item."
+  [error]
+  (->Failure error))
+
+(defn val?
+  "Returns true if the result is a success."
+  [try-result]
+  (instance? Success try-result))
+
+(defn err?
+  "Returns true if the result is a failure."
+  [try-result]
+  (instance? Failure try-result))
+
+(defn val-or
+  "If the result is a success, the value is returned,
+  else the value passed as the default is returned."
+  [try-result default]
+  (if (err? try-result)
+    default
+    (:value try-result)))
+
+(defn val-or-nil
+  "If the result is a success, the value is returned, else nil is returned."
+  [try-result]
+  (val-or try-result nil))
