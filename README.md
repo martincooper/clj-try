@@ -14,7 +14,8 @@ Each expression passed to a try block is evaluated in a try catch handler. If th
 If any expression in a try block fails / throws an exception, the call chain short-circuits returning the original exception in a Failure record with an :error key containing the exception...
 
 ```clojure
-;; => #clj_try.core.Failure{:error #<ArithmeticException java.lang.ArithmeticException: Divide by zero>}
+;; => #clj_try.core.Failure{:error #<ArithmeticException
+;;          java.lang.ArithmeticException: Divide by zero>}
 ```
 
 # Example Usage
@@ -50,7 +51,8 @@ The "Try Thread First" macro is based on the Clojure/core "thread first" -> macr
        (str (/ 100 0))     ;; Div by zero exception!! 
        first)
 
-;; => #clj_try.core.Failure{:error #<ArithmeticException java.lang.ArithmeticException: Divide by zero>}
+;; => #clj_try.core.Failure{:error #<ArithmeticException
+;;          java.lang.ArithmeticException: Divide by zero>}
 ```
 
 ## Try - Thread last
@@ -73,7 +75,7 @@ The "Try Thread Last" macro is based on the Clojure/core "thread last" ->> macro
         (reduce +))
 
 ;; => #clj_try.core.Failure{:error #<ArithmeticException
-                java.lang.ArithmeticException: Divide by zero>}
+;;         java.lang.ArithmeticException: Divide by zero>}
 ```
 
 ## Try - Thread as
@@ -94,7 +96,8 @@ The "Try Thread As" macro is based on the Clojure/core "thread as" as-> macro. E
        (Integer/parseInt %)   ;; NumberFormatException !!
        (.trim %)
 
-;; => #clj_try.core.Failure{:error #<NumberFormatException java.lang.NumberFormatException: For input string: " X B C D ">}
+;; => #clj_try.core.Failure{:error #<NumberFormatException
+;;          java.lang.NumberFormatException: For input string: " X B C D ">}
 ```
 
 ### Credits
